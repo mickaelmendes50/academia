@@ -8,7 +8,6 @@ public class Aluno extends Usuario {
     private double peso;
     private double altura;
     private String matrícula;
-    private Plano plano;
     private TabelaTreino tabelaTreino;
 
     public Aluno(String nome, String cpf, String telefone, double peso, double altura, String matrícula) {
@@ -24,14 +23,6 @@ public class Aluno extends Usuario {
 
     public void setMatrícula(String matrícula) {
         this.matrícula = matrícula;
-    }
-
-    public Plano getPlano() {
-        return plano;
-    }
-
-    public void setPlano(Plano plano) {
-        this.plano = plano;
     }
 
     public TabelaTreino getTabelaTreino() {
@@ -58,9 +49,8 @@ public class Aluno extends Usuario {
         return altura;
     }
 
-    public String toString() {
-        String dados = "Peso: " + getPeso() + "\n" +
-                       "Altura: " + getAltura() + "\n";
-        return super.toString() + dados;
+    @Override
+    public Plano getPlano() {
+        return this.plano;
     }
 }
