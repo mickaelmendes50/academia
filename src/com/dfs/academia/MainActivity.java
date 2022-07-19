@@ -1,11 +1,10 @@
 package com.dfs.academia;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 import com.dfs.academia.models.plano.Beneficio;
 import com.dfs.academia.models.plano.Plano;
-import com.dfs.academia.models.plano.PlanoDuracao;
+import com.dfs.academia.models.plano.TipoPlano;
 import com.dfs.academia.models.usuario.Aluno;
 
 public class MainActivity {
@@ -18,7 +17,7 @@ public class MainActivity {
         System.out.println(aluno.toString());
 
         String descricao = "Acesso a todas as modalidades";
-        Plano plano = new Plano("Completo", descricao, PlanoDuracao.SEMESTRAL, 100.0);
+        Plano plano = new Plano("Completo", descricao, TipoPlano.SEMESTRAL, 100.0);
 
         Beneficio beneficio = new Beneficio("Cardio", 35.0);
         ArrayList<Beneficio> beneficios = new ArrayList<>();

@@ -1,6 +1,6 @@
 package com.dfs.academia.models.plano;
 
-public enum PlanoDuracao {
+public enum TipoPlano {
     MENSAL(1, 0), 
     TRIMESTRAL(3, 3), 
     SEMESTRAL(6, 5), 
@@ -9,7 +9,7 @@ public enum PlanoDuracao {
     private int meses;
     private double porcentagemDesconto;
 
-    private PlanoDuracao(int meses, double porcentagemDesconto) {
+    private TipoPlano(int meses, double porcentagemDesconto) {
         this.meses = meses;
         this.porcentagemDesconto = porcentagemDesconto;
     }

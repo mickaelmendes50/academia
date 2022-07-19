@@ -5,11 +5,11 @@ import java.util.ArrayList;
 public class Plano implements IPlano {
     private String titulo;
     private String descricao;
-    private PlanoDuracao duracao;
+    private TipoPlano duracao;
     private double valorMensalidade;
     private ArrayList<Beneficio> beneficios = new ArrayList<Beneficio>();
     
-    public Plano(String titulo, String descricao, PlanoDuracao duracao, double valorMensalidade,
+    public Plano(String titulo, String descricao, TipoPlano duracao, double valorMensalidade,
             ArrayList<Beneficio> beneficios) {
         this.titulo = titulo;
         this.descricao = descricao;
@@ -18,7 +18,7 @@ public class Plano implements IPlano {
         this.beneficios = beneficios;
     }
 
-    public Plano(String titulo, String descricao, PlanoDuracao duracao, double valorMensalidade) {
+    public Plano(String titulo, String descricao, TipoPlano duracao, double valorMensalidade) {
         this.titulo = titulo;
         this.descricao = descricao;
         this.duracao = duracao;
@@ -36,11 +36,11 @@ public class Plano implements IPlano {
                     (1 - duracao.getPorcentagemDesconto())) - valorBeneficios;
     }
 
-    public PlanoDuracao getDuracao() {
+    public TipoPlano getDuracao() {
         return duracao;
     }
 
-    public void setDuracao(PlanoDuracao duracao) {
+    public void setDuracao(TipoPlano duracao) {
         this.duracao = duracao;
     }
 
