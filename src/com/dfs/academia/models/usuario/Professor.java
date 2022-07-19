@@ -1,5 +1,8 @@
 package com.dfs.academia.models.usuario;
 
+import com.dfs.academia.models.plano.Plano;
+import com.dfs.academia.models.plano.TipoPlano;
+
 public class Professor extends Usuario {
 
     private Turno turno;
@@ -22,4 +25,10 @@ public class Professor extends Usuario {
     public void setRegistroCref(String registroCref) {
         this.registroCref = registroCref;
     }
+    @Override
+    public Plano getPlano() {
+        Plano plano = new Plano("Plano", "Professor", TipoPlano.PROFESSOR, 0);
+        return plano;
+    }
+
 }
