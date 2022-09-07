@@ -1,15 +1,22 @@
 package com.academia.controllers;
 
 import com.academia.entities.Equipment;
+import com.academia.export.EquipmentExcelExporter;
 import com.academia.repositories.EquipmentRepository;
 import com.academia.responses.APIResponse;
+import com.academia.services.EquipmentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,6 +24,9 @@ import java.util.Optional;
 public class EquipmentController {
     @Autowired
     private EquipmentRepository equipmentRepository;
+
+    @Autowired
+    private EquipmentService service;
 
     @RequestMapping(value = "/equipment", method = RequestMethod.GET)
     public ResponseEntity<APIResponse<List<Equipment>>> findAll() {
@@ -30,7 +40,6 @@ public class EquipmentController {
         }
 
         apiResponse.setData(equipments);
-
         return ResponseEntity.ok(apiResponse);
     }
 
@@ -113,4 +122,20 @@ public class EquipmentController {
         }
     }
 
+    @GetMapping("/equipment/export/excel")
+    public void exportToExcel(HttpServletResponse response) throws IOException {
+        response.setContentType("application/octet-stream");
+        DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
+        String currentDateTime = dateFormatter.format(new Date());
+
+        String headerKey = "Content-Disposition";
+        String headerValue = "attachment; filename=equipments_" + currentDateTime + ".xlsx";
+        response.setHeader(headerKey, headerValue);
+
+        List<Equipment> listEquipment = service.listAll();
+
+        EquipmentExcelExporter excelExporter = new EquipmentExcelExporter(listEquipment);
+
+        excelExporter.export(response);
+    }
 }
