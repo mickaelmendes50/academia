@@ -1,25 +1,25 @@
-import React, {useState, useContext} from 'react';
-import {Route, Routes} from 'react-router-dom';
-import { AuthContext } from '../contexts/auth';
+import { Route, Routes } from 'react-router-dom';
+
 import Login from '../pages/Login';
 import Cadastro from '../pages/Cadastro';
-import CadastroStudent from '../pages/CadastroUsuario'
+import CadastroStudent from '../pages/CadastroUsuario';
 import Dashboard from '../pages/Dashboard';
-import PrivateRoutes from './PrivateRoutes';
-export const AppRoutes = () =>{
-    const { user }: any = useContext(AuthContext);
-    return (
-        <Routes>
-            <Route path='/' element={<Login/>}></Route>
-            <Route path='/cadastro' element={<Cadastro/>}></Route>
-            <Route path='/dashboard' element={
-                 <Dashboard/>
-                // <PrivateRoutes user={user} redirectPath={'/'}>
-                   
-                // </PrivateRoutes>
-            }>
-            </Route>
-            <Route path='/cadastro/students' element={<CadastroStudent/>}></Route>
-        </Routes>
-    )
+
+export function AppRoutes() {
+  return (
+    <Routes>
+      <Route path="/" element={<Login />} />
+      <Route path="/cadastro" element={<Cadastro />} />
+      <Route
+        path="/dashboard"
+        element={
+          <Dashboard />
+          // <PrivateRoutes user={user} redirectPath={'/'}>
+
+          // </PrivateRoutes>
+        }
+      />
+      <Route path="/cadastro/students" element={<CadastroStudent />} />
+    </Routes>
+  );
 }
