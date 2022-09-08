@@ -1,5 +1,7 @@
 package com.academia.controllers;
 
+import com.academia.export.StudentExcelExporter;
+import com.academia.services.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,7 +12,12 @@ import com.academia.entities.Students;
 import com.academia.repositories.StudentRepository;
 import com.academia.responses.APIResponse;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,6 +25,8 @@ import java.util.Optional;
 public class StudentsController {
     @Autowired
     private StudentRepository studentsRepository;
+    @Autowired
+    private StudentService service;
 
     @RequestMapping(value = "/students", method = RequestMethod.GET)
     public ResponseEntity<APIResponse<List<Students>>> index() {
@@ -110,5 +119,22 @@ public class StudentsController {
             apiResponse.getErrors().add("Aluno não encontrado");
             return new ResponseEntity<>(apiResponse, HttpStatus.NOT_FOUND);
         }
+    }
+
+    @GetMapping("/students/export/excel")
+    public void exportToExcel(HttpServletResponse response) throws IOException {
+        response.setContentType("application/octet-stream");
+        DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
+        String currentDateTime = dateFormatter.format(new Date());
+
+        String headerKey = "Content-Disposition";
+        String headerValue = "attachment; filename=alunos_" + currentDateTime + ".xlsx";
+        response.setHeader(headerKey, headerValue);
+
+        List<Students> listStudents = service.listAll();
+
+        StudentExcelExporter excelExporter = new StudentExcelExporter(listStudents);
+
+        excelExporter.export(response);
     }
 }
