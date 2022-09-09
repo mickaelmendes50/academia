@@ -1,3 +1,5 @@
+import { ToastContainer } from 'react-toastify';
+
 import { AppRoutes } from './routes/index';
 import { Provider } from './providers';
 
@@ -8,6 +10,7 @@ function App() {
     <Provider>
       <GlobalStyles />
       <AppRoutes />
+      <ToastContainer />
     </Provider>
   );
 }

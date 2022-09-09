@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import { FormEvent, useState } from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import {
   Box,
   Button,
@@ -16,31 +17,37 @@ import { TextInput } from '../../components/Form';
 
 export default function Cadastro() {
   const navigate = useNavigate();
-  const [nome, setNome] = useState('');
-  const [email, setEmail] = useState('');
-  const [senha, setSenha] = useState('');
-  const [token, setToken] = useState('');
 
-  function reset() {
-    setEmail('');
-    setSenha('');
-  }
-  async function handleSubmit() {
-    const dados = {
-      nome,
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [token, setToken] = useState('');
+  const [loading, setLoading] = useState(false);
+
+  async function handleSubmit(event: FormEvent) {
+    event.preventDefault();
+
+    const payload = {
+      name,
       email,
-      senha,
+      password,
       token,
     };
-    try {
-      await axios.post('http://localhost:8000/users/create', dados);
 
-      reset();
+    try {
+      setLoading(true);
+
+      await axios.post('http://localhost:8000/users/create', payload);
+      toast.success('Cadastro realizado com sucesso!');
+
       navigate('/');
-    } catch (error: any) {
-      reset();
+    } catch (error) {
+      toast.error('Falha ao cadastrar usuário!');
+    } finally {
+      setLoading(false);
     }
   }
+
   return (
     <Box
       component="main"
@@ -94,7 +101,7 @@ export default function Cadastro() {
             id="name"
             name="name"
             required
-            onChange={event => setNome(event.target.value)}
+            onChange={event => setName(event.target.value)}
           />
         </FormControl>
 
@@ -120,7 +127,7 @@ export default function Cadastro() {
             name="password"
             type="password"
             required
-            onChange={event => setSenha(event.target.value)}
+            onChange={event => setPassword(event.target.value)}
           />
         </FormControl>
 
@@ -140,9 +147,10 @@ export default function Cadastro() {
           type="submit"
           variant="contained"
           style={{ background: '#FB8500' }}
+          disabled={loading}
           fullWidth
         >
-          Cadastrar
+          {loading ? 'Carregando...' : 'Cadastrar'}
         </Button>
       </Container>
     </Box>

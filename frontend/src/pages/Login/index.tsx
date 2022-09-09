@@ -1,5 +1,6 @@
-import { useState, useContext } from 'react';
+import { useState, useContext, FormEvent } from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import {
   Box,
   Button,
@@ -20,17 +21,29 @@ export default function Login() {
   const navigate = useNavigate();
 
   const [email, setEmail] = useState('');
-  const [senha, setSenha] = useState('');
-  const [lembrar, setLembrar] = useState(false);
+  const [password, setPassword] = useState('');
+  const [rememberMe, setRememberMe] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const { login }: any = useContext(AuthContext);
 
-  async function handleSubmit() {
-    const user = await login(email, senha);
-    if (user) {
+  async function handleSubmit(event: FormEvent) {
+    event.preventDefault();
+
+    try {
+      setLoading(true);
+
+      await login({ email, password, rememberMe });
+      toast.success('Login realizado com sucesso!');
+
       navigate('/dashboard');
+    } catch (error) {
+      toast.error('Falha ao realizar login!');
+    } finally {
+      setLoading(false);
     }
   }
+
   return (
     <Box
       component="main"
@@ -98,15 +111,15 @@ export default function Login() {
             name="password"
             type="password"
             required
-            onChange={event => setSenha(event.target.value)}
+            onChange={event => setPassword(event.target.value)}
           />
         </FormControl>
 
         <FormControlLabel
           control={
             <Checkbox
-              checked={lembrar}
-              onChange={event => setLembrar(event.target.checked)}
+              checked={rememberMe}
+              onChange={event => setRememberMe(event.target.checked)}
             />
           }
           label="Lembre-se de mim"
@@ -117,9 +130,10 @@ export default function Login() {
           type="submit"
           variant="contained"
           style={{ background: '#FB8500' }}
+          disabled={loading}
           fullWidth
         >
-          Entrar
+          {loading ? 'Carregando...' : 'Entrar'}
         </Button>
       </Container>
     </Box>

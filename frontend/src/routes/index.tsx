@@ -4,8 +4,13 @@ import Login from '../pages/Login';
 import Cadastro from '../pages/Cadastro';
 import CadastroStudent from '../pages/CadastroUsuario';
 import Dashboard from '../pages/Dashboard';
+import PrivateRoutes from './PrivateRoutes';
+
+import { useAuthContext } from '../contexts/auth';
 
 export function AppRoutes() {
+  const { user } = useAuthContext();
+
   return (
     <Routes>
       <Route path="/" element={<Login />} />
@@ -13,10 +18,9 @@ export function AppRoutes() {
       <Route
         path="/dashboard"
         element={
-          <Dashboard />
-          // <PrivateRoutes user={user} redirectPath={'/'}>
-
-          // </PrivateRoutes>
+          <PrivateRoutes user={user} redirectPath="/">
+            <Dashboard />
+          </PrivateRoutes>
         }
       />
       <Route path="/cadastro/students" element={<CadastroStudent />} />

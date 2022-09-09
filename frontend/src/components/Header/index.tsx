@@ -19,7 +19,7 @@ const pages = ['Dashboard', 'Cadastro', 'Logout'];
 const settings = ['Perfil', 'Dashboard', 'Logout'];
 
 export default function Header() {
-  const { setUser }: any = useContext(AuthContext);
+  const { logout }: any = useContext(AuthContext);
   const navigate = useNavigate();
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
@@ -40,9 +40,7 @@ export default function Header() {
   };
   const handleCloseMenu = (setting: string) => {
     if (setting === 'Logout') {
-      setUser('');
-      localStorage.removeItem('AuthToken');
-      localStorage.removeItem('User');
+      logout();
     }
     if (setting === 'Dashboard') {
       navigate('/dashboard');
@@ -50,9 +48,7 @@ export default function Header() {
   };
   const handleCloseNavBar = (page: any) => {
     if (page === 'Logout') {
-      setUser('');
-      localStorage.removeItem('AuthToken');
-      localStorage.removeItem('User');
+      logout();
     }
     if (page === 'Dashboard') {
       navigate('/dashboard');

@@ -1,50 +1,59 @@
-import { useState, createContext, useMemo } from 'react';
+import { useState, createContext, useMemo, useContext } from 'react';
 import axios from 'axios';
 
-export const AuthContext = createContext({});
+type LoginArgs = {
+  email: string;
+  password: string;
+  rememberMe: boolean;
+};
+
+interface AuthContextProps {
+  user: string;
+  login: (args: LoginArgs) => void;
+  logout: () => void;
+}
+
+export const AuthContext = createContext({} as AuthContextProps);
+
+export const useAuthContext = () => useContext(AuthContext);
 
 export default function AuthProvider({ children }: any) {
-  const [user, setUser] = useState('');
-  const [mensagem, setMensagem] = useState({
-    err: false,
-    msg: '',
-  });
+  const [user, setUser] = useState(
+    () => localStorage.getItem('@academia:user') || '',
+  );
 
-  async function login(email: any, senha: any) {
-    const dados = {
+  async function login({ email, password, rememberMe }: LoginArgs) {
+    const payload = {
       email,
-      senha,
+      password,
     };
 
-    try {
-      const { data } = await axios.post(
-        'http://localhost:8000/user/login',
-        dados,
-      );
-      setUser(data.token);
-      localStorage.setItem('AuthToken', data.token);
-      localStorage.setItem('User', email);
+    const { data } = await axios.post(
+      'http://localhost:8000/user/login',
+      payload,
+    );
 
-      return true;
-    } catch (error: any) {
-      const msg = error.response.data.err;
-      setMensagem({
-        err: true,
-        msg,
-      });
+    setUser(email);
+    localStorage.setItem('@academia:auth_token', data.token);
 
-      return false;
+    if (rememberMe) {
+      localStorage.setItem('@academia:user', email);
     }
+  }
+
+  function logout() {
+    setUser('');
+    localStorage.removeItem('@academia:auth_token');
+    localStorage.removeItem('@academia:user');
   }
 
   const value = useMemo(
     () => ({
-      login,
-      mensagem,
       user,
-      setUser,
+      login,
+      logout,
     }),
-    [login, mensagem, user, setUser],
+    [user, login, logout],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
