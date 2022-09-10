@@ -1,27 +1,26 @@
-import { FormEvent, useState } from 'react';
-import { Link as RouterLink, useNavigate } from 'react-router-dom';
-import { toast } from 'react-toastify';
 import {
   Box,
   Button,
   Container,
-  Typography,
-  Link,
   FormControl,
   InputLabel,
+  Typography,
 } from '@mui/material';
-import FitnessCenterRoundedIcon from '@mui/icons-material/FitnessCenterRounded';
-import axios from 'axios';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import { FormEvent, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
-import { TextInput } from '../../components/Form';
+import { Layout } from '../../../components/Layout';
+import { TextInput } from '../../../components/Form';
 
-export default function Cadastro() {
+export default function CreateStudent() {
   const navigate = useNavigate();
 
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [token, setToken] = useState('');
+  const [cpf, setCpf] = useState('');
+  const [planType, setPlanType] = useState('');
   const [loading, setLoading] = useState(false);
 
   async function handleSubmit(event: FormEvent) {
@@ -30,63 +29,56 @@ export default function Cadastro() {
     const payload = {
       name,
       email,
-      password,
-      token,
+      cpf,
+      planType,
     };
 
     try {
       setLoading(true);
 
-      await axios.post('http://localhost:8000/users/create', payload);
-      toast.success('Cadastro realizado com sucesso!');
+      console.log(payload);
 
-      navigate('/');
+      toast.success('Aluno cadastrado com sucesso!');
     } catch (error) {
-      toast.error('Falha ao cadastrar usuário!');
+      toast.error('Erro ao cadastrar aluno!');
     } finally {
       setLoading(false);
     }
   }
 
   return (
-    <Box
-      component="main"
-      padding="80px 32px"
-      width="100%"
-      minHeight="100vh"
-      display="flex"
-      flexDirection="column"
-      alignItems="center"
-    >
-      <FitnessCenterRoundedIcon sx={{ color: '#fb8500', fontSize: '64px' }} />
-      <Typography
-        component="h1"
-        variant="h5"
-        marginTop="16px"
-        marginBottom="8px"
+    <Layout>
+      <Box
+        display="flex"
+        alignItems="flex-start"
+        justifyContent="space-between"
       >
-        Crie uma nova conta
-      </Typography>
-      <Typography>
-        Ou{' '}
-        <Link
-          component={RouterLink}
-          to="/"
-          variant="body1"
-          color="#fb8500"
-          fontWeight="700"
-          sx={{ textDecoration: 'none' }}
+        <Box>
+          <Typography variant="h4">Cadastrar aluno</Typography>
+          <Typography variant="body1" marginTop="16px">
+            Utilize os campos abaixo para cadastrar um novo aluno.
+          </Typography>
+        </Box>
+
+        <Button
+          size="large"
+          variant="contained"
+          startIcon={<ArrowBackIcon />}
+          onClick={() => {
+            navigate('/students/');
+          }}
+          style={{ background: '#25a18e' }}
         >
-          entre agora
-        </Link>
-      </Typography>
+          Voltar
+        </Button>
+      </Box>
 
       <Container
-        component="form"
         onSubmit={handleSubmit}
+        component="form"
         maxWidth="xs"
         sx={{
-          marginTop: '32px',
+          marginTop: '48px',
           borderRadius: '16px',
           background: '#ffffff',
           boxShadow: '0px 4px 6px -1px rgba(0, 0, 0, 0.1)',
@@ -119,27 +111,26 @@ export default function Cadastro() {
         </FormControl>
 
         <FormControl variant="standard" fullWidth sx={{ marginBottom: '16px' }}>
-          <InputLabel shrink htmlFor="password">
-            Senha
+          <InputLabel shrink htmlFor="cpf">
+            CPF
           </InputLabel>
           <TextInput
-            id="password"
-            name="password"
-            type="password"
+            id="cpf"
+            name="cpf"
             required
-            onChange={event => setPassword(event.target.value)}
+            onChange={event => setCpf(event.target.value)}
           />
         </FormControl>
 
         <FormControl variant="standard" fullWidth sx={{ marginBottom: '32px' }}>
-          <InputLabel shrink htmlFor="token">
-            Token
+          <InputLabel shrink htmlFor="plan-type">
+            Tipo Plano
           </InputLabel>
           <TextInput
-            id="token"
-            name="token"
+            id="plan-type"
+            name="tipo-plano"
             required
-            onChange={event => setToken(event.target.value)}
+            onChange={event => setPlanType(event.target.value)}
           />
         </FormControl>
 
@@ -153,6 +144,6 @@ export default function Cadastro() {
           {loading ? 'Carregando...' : 'Cadastrar'}
         </Button>
       </Container>
-    </Box>
+    </Layout>
   );
 }

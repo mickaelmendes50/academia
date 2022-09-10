@@ -1,40 +1,60 @@
-import {useState, createContext} from 'react';
+import { useState, createContext, useMemo, useContext } from 'react';
 import axios from 'axios';
-export const AuthContext = createContext({});
 
-export default function AuthProvider({ children }: any){
-    const [user, setUser] = useState('');
-    const [mensagem, setMensagem] = useState({
-        err: false,
-        msg: ''
-    });
-    
-    async function Login(email: any, senha: any){
-        const dados = {
-            email: email,
-            senha: senha
-        }
-        try {
-            const {data} = await axios.post('http://localhost:8000/user/login', dados);
-            setUser(data.token);
-            localStorage.setItem('AuthToken', data.token);
-            localStorage.setItem('User', email);
-            return 'OK';
+type LoginArgs = {
+  email: string;
+  password: string;
+  rememberMe: boolean;
+};
 
-        } catch (error: any) {
-            const msg = error.response.data.err;
-            setMensagem({
-                err: true,
-                msg: msg
-            });
-            return
-        }
+interface AuthContextProps {
+  user: string;
+  login: (args: LoginArgs) => void;
+  logout: () => void;
+}
+
+export const AuthContext = createContext({} as AuthContextProps);
+
+export const useAuthContext = () => useContext(AuthContext);
+
+export default function AuthProvider({ children }: any) {
+  const [user, setUser] = useState(
+    () => localStorage.getItem('@academia:user') || '',
+  );
+
+  async function login({ email, password, rememberMe }: LoginArgs) {
+    // const payload = {
+    //   email,
+    //   password,
+    // };
+
+    // const { data } = await axios.post(
+    //   'http://localhost:8000/user/login',
+    //   payload,
+    // );
+
+    setUser(email);
+    localStorage.setItem('@academia:auth_token', 'data.token');
+
+    if (rememberMe) {
+      localStorage.setItem('@academia:user', email);
     }
-    return(
-        <>
-            <AuthContext.Provider value={{Login, mensagem, user, setUser}}>
-                {children}
-            </AuthContext.Provider> 
-        </>
-    )
+  }
+
+  function logout() {
+    setUser('');
+    localStorage.removeItem('@academia:auth_token');
+    localStorage.removeItem('@academia:user');
+  }
+
+  const value = useMemo(
+    () => ({
+      user,
+      login,
+      logout,
+    }),
+    [user, login, logout],
+  );
+
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }

@@ -1,70 +1,141 @@
-import React, {useState, useContext} from 'react';
-import axios from 'axios';
+import { useState, useContext, FormEvent } from 'react';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import {
+  Box,
+  Button,
+  Container,
+  Typography,
+  Link,
+  FormControl,
+  InputLabel,
+  FormControlLabel,
+  Checkbox,
+} from '@mui/material';
+import FitnessCenterRoundedIcon from '@mui/icons-material/FitnessCenterRounded';
+
 import { AuthContext } from '../../contexts/auth';
-import { useNavigate } from 'react-router-dom';
-import { Avatar, Box, Button, Container, TextField, Typography, Grid, Link} from "@mui/material";
-import FitnessCenterIcon from '@mui/icons-material/FitnessCenter';
+import { TextInput } from '../../components/Form';
 
 export default function Login() {
-    const navigate = useNavigate();
-    const [email, setEmail] = useState("");
-    const [senha, setSenha] = useState("");
-    const { Login, mensagem }: any = useContext(AuthContext);
+  const navigate = useNavigate();
 
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [rememberMe, setRememberMe] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-    async function handleSubmit(){
-      const user = await Login(email, senha);
-      if(user){
-        navigate("/dashboard");
-      } 
-   }
-    return (
-        <Container component="main" maxWidth="xs">
-        <Box sx={{
-            marginTop: 8,
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-        }}>
-            <Avatar sx={{bgcolor: 'orange'}}>
-                <FitnessCenterIcon/>
-            </Avatar>
-            <Typography component="h1" variant="h5">
-                Entre em sua conta
-            </Typography>
-            <Typography component="h1" variant="h5">
-              <Link href="/cadastro" variant="body1">
-                  {"Ou Cadastre-se"}
-              </Link>
-            </Typography>
-            {mensagem.err ? (
-                <div>
-                    <span style={{color: 'red'}}>{mensagem.msg}</span>
-                </div>
-            ) : (
-                <div>
-                    <span style={{color: 'green'}}>{mensagem.msg}</span>
-                </div>
-            )}
-            <TextField
-              margin="normal"
-              fullWidth
-              label="Digite seu E-mail"
-              name="email"
-              autoComplete="email"
-              autoFocus
-              onChange={(event) => setEmail(event.target.value)}
+  const { login }: any = useContext(AuthContext);
+
+  async function handleSubmit(event: FormEvent) {
+    event.preventDefault();
+
+    try {
+      setLoading(true);
+
+      await login({ email, password, rememberMe });
+      toast.success('Login realizado com sucesso!');
+
+      navigate('/students');
+    } catch (error) {
+      toast.error('Falha ao realizar login!');
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  return (
+    <Box
+      component="main"
+      padding="80px 32px"
+      width="100%"
+      minHeight="100vh"
+      display="flex"
+      flexDirection="column"
+      alignItems="center"
+    >
+      <FitnessCenterRoundedIcon sx={{ color: '#fb8500', fontSize: '64px' }} />
+      <Typography
+        component="h1"
+        variant="h5"
+        marginTop="16px"
+        marginBottom="8px"
+      >
+        Entre em sua conta
+      </Typography>
+      <Typography>
+        Ou{' '}
+        <Link
+          component={RouterLink}
+          to="/cadastro"
+          variant="body1"
+          color="#fb8500"
+          fontWeight="700"
+          sx={{ textDecoration: 'none' }}
+        >
+          cadastre-se
+        </Link>
+      </Typography>
+
+      <Container
+        component="form"
+        onSubmit={handleSubmit}
+        maxWidth="xs"
+        sx={{
+          marginTop: '32px',
+          borderRadius: '16px',
+          background: '#ffffff',
+          boxShadow: '0px 4px 6px -1px rgba(0, 0, 0, 0.1)',
+        }}
+        style={{ padding: '36px' }}
+      >
+        <FormControl variant="standard" fullWidth sx={{ marginBottom: '16px' }}>
+          <InputLabel shrink htmlFor="email">
+            E-mail
+          </InputLabel>
+          <TextInput
+            id="email"
+            name="email"
+            autoComplete="email"
+            required
+            onChange={event => setEmail(event.target.value)}
+          />
+        </FormControl>
+
+        <FormControl variant="standard" fullWidth sx={{ marginBottom: '16px' }}>
+          <InputLabel shrink htmlFor="password">
+            Senha
+          </InputLabel>
+          <TextInput
+            id="password"
+            name="password"
+            type="password"
+            required
+            onChange={event => setPassword(event.target.value)}
+          />
+        </FormControl>
+
+        <FormControlLabel
+          control={
+            <Checkbox
+              checked={rememberMe}
+              onChange={event => setRememberMe(event.target.checked)}
             />
-            <TextField
-              margin="normal"
-              fullWidth
-              name="password"
-              label="Digite sua Senha"
-              type="password"
-              onChange={(event) => setSenha(event.target.value)}
-            />
-            <Button  variant="contained" style={{background: '#FB8500'}} fullWidth sx={{mt: 3, mb: 3}} onClick={handleSubmit}>Login</Button>        
-        </Box>
+          }
+          label="Lembre-se de mim"
+          sx={{ marginBottom: '32px' }}
+        />
+
+        <Button
+          type="submit"
+          variant="contained"
+          style={{ background: '#FB8500' }}
+          disabled={loading}
+          fullWidth
+        >
+          {loading ? 'Carregando...' : 'Entrar'}
+        </Button>
       </Container>
-    )
+    </Box>
+  );
 }
