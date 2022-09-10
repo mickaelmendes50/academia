@@ -7,21 +7,50 @@ import {
   Typography,
 } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import { FormEvent, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { FormEvent, useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 import { Layout } from '../../../components/Layout';
 import { TextInput } from '../../../components/Form';
 import { axiosCrud } from '../../../services';
 
-export default function CreateExercise() {
+type Exercise = {
+  id: number;
+  name: string;
+  muscleGroup: string;
+  equipment: string;
+};
+
+type ExerciseAPIResponse = {
+  data: Exercise;
+  errors: string[];
+};
+
+export default function EditExercise() {
+  const { id } = useParams();
+
   const navigate = useNavigate();
 
   const [name, setName] = useState('');
   const [equipment, setEquipment] = useState('');
   const [muscularGroup, setMuscularGroup] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    axiosCrud
+      .get<ExerciseAPIResponse>(`/exercise/${id}`)
+      .then(response => {
+        setName(response.data.data.name);
+        setEquipment(response.data.data.equipment);
+        setMuscularGroup(response.data.data.muscleGroup);
+      })
+      .catch(error => {
+        toast.error('Não foi possível carregar o exercício no momento');
+
+        navigate(-1);
+      });
+  }, [id]);
 
   async function handleSubmit(event: FormEvent) {
     event.preventDefault();
@@ -35,12 +64,12 @@ export default function CreateExercise() {
     };
 
     axiosCrud
-      .post('/exercise', payload)
+      .put(`/exercise/${id}`, payload)
       .then(() => {
-        toast.success('Exercício cadastrado com sucesso!');
+        toast.success('Exercício editado com sucesso!');
       })
       .catch(() => {
-        toast.error('Erro ao cadastrar exercício!');
+        toast.error('Erro ao editar exercício!');
       })
       .finally(() => {
         setIsLoading(false);
@@ -55,9 +84,9 @@ export default function CreateExercise() {
         justifyContent="space-between"
       >
         <Box>
-          <Typography variant="h4">Cadastrar exercício</Typography>
+          <Typography variant="h4">Editar exercício</Typography>
           <Typography variant="body1" marginTop="16px">
-            Utilize os campos abaixo para cadastrar um novo exercício.
+            Utilize os campos abaixo para editar o exercício selecionado.
           </Typography>
         </Box>
 
@@ -93,8 +122,9 @@ export default function CreateExercise() {
           <TextInput
             id="name"
             name="name"
-            required
+            value={name}
             onChange={event => setName(event.target.value)}
+            required
           />
         </FormControl>
 
@@ -105,8 +135,9 @@ export default function CreateExercise() {
           <TextInput
             id="equipment"
             name="equipment"
-            required
+            value={equipment}
             onChange={event => setEquipment(event.target.value)}
+            required
           />
         </FormControl>
 
@@ -117,8 +148,9 @@ export default function CreateExercise() {
           <TextInput
             id="muscular-group"
             name="muscular-group"
-            required
+            value={muscularGroup}
             onChange={event => setMuscularGroup(event.target.value)}
+            required
           />
         </FormControl>
 
@@ -129,7 +161,7 @@ export default function CreateExercise() {
           disabled={isLoading}
           fullWidth
         >
-          {isLoading ? 'Carregando...' : 'Cadastrar'}
+          {isLoading ? 'Carregando...' : 'Editar'}
         </Button>
       </Container>
     </Layout>

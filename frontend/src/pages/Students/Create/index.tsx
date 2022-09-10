@@ -9,7 +9,10 @@ import {
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { FormEvent, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { PatternFormat } from 'react-number-format';
 import { toast } from 'react-toastify';
+
+import { axiosCrud } from '../../../services';
 
 import { Layout } from '../../../components/Layout';
 import { TextInput } from '../../../components/Form';
@@ -21,29 +24,31 @@ export default function CreateStudent() {
   const [email, setEmail] = useState('');
   const [cpf, setCpf] = useState('');
   const [planType, setPlanType] = useState('');
-  const [loading, setLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   async function handleSubmit(event: FormEvent) {
     event.preventDefault();
+
+    setIsLoading(true);
 
     const payload = {
       name,
       email,
       cpf,
-      planType,
+      tipo: planType,
     };
 
-    try {
-      setLoading(true);
-
-      console.log(payload);
-
-      toast.success('Aluno cadastrado com sucesso!');
-    } catch (error) {
-      toast.error('Erro ao cadastrar aluno!');
-    } finally {
-      setLoading(false);
-    }
+    axiosCrud
+      .post('/students', payload)
+      .then(() => {
+        toast.success('Aluno cadastrado com sucesso!');
+      })
+      .catch(() => {
+        toast.error('Erro ao cadastrar aluno!');
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
   }
 
   return (
@@ -114,11 +119,13 @@ export default function CreateStudent() {
           <InputLabel shrink htmlFor="cpf">
             CPF
           </InputLabel>
-          <TextInput
+          <PatternFormat
+            format="###.###.###-##"
+            customInput={TextInput}
             id="cpf"
             name="cpf"
             required
-            onChange={event => setCpf(event.target.value)}
+            onValueChange={v => setCpf(v.formattedValue)}
           />
         </FormControl>
 
@@ -138,10 +145,10 @@ export default function CreateStudent() {
           type="submit"
           variant="contained"
           style={{ background: '#FB8500' }}
-          disabled={loading}
+          disabled={isLoading}
           fullWidth
         >
-          {loading ? 'Carregando...' : 'Cadastrar'}
+          {isLoading ? 'Carregando...' : 'Cadastrar'}
         </Button>
       </Container>
     </Layout>
