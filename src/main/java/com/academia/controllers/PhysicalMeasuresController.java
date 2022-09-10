@@ -43,7 +43,7 @@ public class PhysicalMeasuresController {
             apiResponse.setData(physicalMeasures.get());
             return ResponseEntity.ok().body(apiResponse);
         } else {
-            apiResponse.getErrors().add("Tabela de exercício não encontrada");
+            apiResponse.getErrors().add("Avalição física não encontrada");
             return new ResponseEntity<>(apiResponse, HttpStatus.NOT_FOUND);
         }
     }
@@ -84,6 +84,9 @@ public class PhysicalMeasuresController {
             physicalMeasures.setBodybuilderName(updatedPhysicalMeasures.getBodybuilderName());
             physicalMeasures.setHeight(updatedPhysicalMeasures.getHeight());
             physicalMeasures.setWeight(updatedPhysicalMeasures.getWeight());
+            physicalMeasures.setArmCircumference(updatedPhysicalMeasures.getArmCircumference());
+            physicalMeasures.setWaistCircumference(updatedPhysicalMeasures.getWaistCircumference());
+            physicalMeasures.setThighCircumference(updatedPhysicalMeasures.getThighCircumference());
 
             physicalMeasuresRepository.save(physicalMeasures);
             apiResponse.setData(physicalMeasures);
@@ -101,6 +104,7 @@ public class PhysicalMeasuresController {
         Optional<PhysicalMeasures> physicalMeasures = physicalMeasuresRepository.findById(id);
 
         if (physicalMeasures.isPresent()) {
+            apiResponse.setData(physicalMeasures.get());
             physicalMeasuresRepository.delete(physicalMeasures.get());
 
             return ResponseEntity.ok().body(apiResponse);

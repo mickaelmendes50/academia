@@ -27,11 +27,29 @@ public class PhysicalMeasures {
     @Min(value = 0)
     @Getter
     @Setter
-    private int weight;
+    private double weight;
 
     @Column(nullable = false)
     @Min(value = 0)
     @Getter
     @Setter
     private int height;
+
+    @Column(nullable = false)
+    @Min(value = 0)
+    @Getter
+    @Setter
+    private double waistCircumference;
+
+    @Column(nullable = false)
+    @Min(value = 0)
+    @Getter
+    @Setter
+    private double armCircumference;
+
+    @Column(nullable = false)
+    @Min(value = 0)
+    @Getter
+    @Setter
+    private double thighCircumference;
 }
