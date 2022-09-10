@@ -7,8 +7,8 @@ import {
   Typography,
 } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import { FormEvent, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { FormEvent, useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import { PatternFormat } from 'react-number-format';
 import { toast } from 'react-toastify';
 
@@ -17,7 +17,22 @@ import { axiosCrud } from '../../../services';
 import { Layout } from '../../../components/Layout';
 import { TextInput } from '../../../components/Form';
 
-export default function CreateStudent() {
+type Student = {
+  id: number;
+  name: string;
+  cpf: string;
+  email: string;
+  tipo: string;
+};
+
+type StudentAPIResponse = {
+  data: Student;
+  errors: string[];
+};
+
+export default function EditStudent() {
+  const { id } = useParams();
+
   const navigate = useNavigate();
 
   const [name, setName] = useState('');
@@ -25,6 +40,22 @@ export default function CreateStudent() {
   const [cpf, setCpf] = useState('');
   const [planType, setPlanType] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    axiosCrud
+      .get<StudentAPIResponse>(`/students/${id}`)
+      .then(response => {
+        setName(response.data.data.name);
+        setEmail(response.data.data.email);
+        setCpf(response.data.data.cpf);
+        setPlanType(response.data.data.tipo);
+      })
+      .catch(error => {
+        toast.error('Não foi possível carregar o aluno no momento');
+
+        navigate(-1);
+      });
+  }, [id]);
 
   async function handleSubmit(event: FormEvent) {
     event.preventDefault();
@@ -39,12 +70,12 @@ export default function CreateStudent() {
     };
 
     axiosCrud
-      .post('/students', payload)
+      .put(`/students/${id}`, payload)
       .then(() => {
-        toast.success('Aluno cadastrado com sucesso!');
+        toast.success('Aluno editado com sucesso!');
       })
       .catch(() => {
-        toast.error('Erro ao cadastrar aluno!');
+        toast.error('Erro ao editar aluno!');
       })
       .finally(() => {
         setIsLoading(false);
@@ -59,9 +90,9 @@ export default function CreateStudent() {
         justifyContent="space-between"
       >
         <Box>
-          <Typography variant="h4">Cadastrar aluno</Typography>
+          <Typography variant="h4">Editar aluno</Typography>
           <Typography variant="body1" marginTop="16px">
-            Utilize os campos abaixo para cadastrar um novo aluno.
+            Utilize os campos abaixo para editar o aluno selecionado.
           </Typography>
         </Box>
 
@@ -97,8 +128,9 @@ export default function CreateStudent() {
           <TextInput
             id="name"
             name="name"
-            required
+            value={name}
             onChange={event => setName(event.target.value)}
+            required
           />
         </FormControl>
 
@@ -110,8 +142,9 @@ export default function CreateStudent() {
             id="email"
             name="email"
             autoComplete="email"
-            required
+            value={email}
             onChange={event => setEmail(event.target.value)}
+            required
           />
         </FormControl>
 
@@ -124,8 +157,9 @@ export default function CreateStudent() {
             customInput={TextInput}
             id="cpf"
             name="cpf"
-            required
+            value={cpf}
             onValueChange={v => setCpf(v.formattedValue)}
+            required
           />
         </FormControl>
 
@@ -136,8 +170,9 @@ export default function CreateStudent() {
           <TextInput
             id="plan-type"
             name="tipo-plano"
-            required
+            value={planType}
             onChange={event => setPlanType(event.target.value)}
+            required
           />
         </FormControl>
 
@@ -148,7 +183,7 @@ export default function CreateStudent() {
           disabled={isLoading}
           fullWidth
         >
-          {isLoading ? 'Carregando...' : 'Cadastrar'}
+          {isLoading ? 'Carregando...' : 'Editar'}
         </Button>
       </Container>
     </Layout>

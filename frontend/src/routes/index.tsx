@@ -4,6 +4,7 @@ import Login from '../pages/Login';
 import Cadastro from '../pages/Cadastro';
 import Students from '../pages/Students';
 import CreateStudent from '../pages/Students/Create';
+import EditStudent from '../pages/Students/Edit';
 import Exercises from '../pages/Exercises';
 import CreateExercise from '../pages/Exercises/Create';
 import PrivateRoutes from './PrivateRoutes';
@@ -30,6 +31,14 @@ export function AppRoutes() {
         element={
           <PrivateRoutes user={user} redirectPath="/">
             <CreateStudent />
+          </PrivateRoutes>
+        }
+      />
+      <Route
+        path="/students/edit/:id"
+        element={
+          <PrivateRoutes user={user} redirectPath="/">
+            <EditStudent />
           </PrivateRoutes>
         }
       />
