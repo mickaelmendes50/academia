@@ -23,18 +23,18 @@ export default function AuthProvider({ children }: any) {
   );
 
   async function login({ email, password, rememberMe }: LoginArgs) {
-    const payload = {
-      email,
-      password,
-    };
+    // const payload = {
+    //   email,
+    //   password,
+    // };
 
-    const { data } = await axios.post(
-      'http://localhost:8000/user/login',
-      payload,
-    );
+    // const { data } = await axios.post(
+    //   'http://localhost:8000/user/login',
+    //   payload,
+    // );
 
     setUser(email);
-    localStorage.setItem('@academia:auth_token', data.token);
+    localStorage.setItem('@academia:auth_token', 'data.token');
 
     if (rememberMe) {
       localStorage.setItem('@academia:user', email);

@@ -36,7 +36,7 @@ export default function Login() {
       await login({ email, password, rememberMe });
       toast.success('Login realizado com sucesso!');
 
-      navigate('/dashboard');
+      navigate('/students');
     } catch (error) {
       toast.error('Falha ao realizar login!');
     } finally {
