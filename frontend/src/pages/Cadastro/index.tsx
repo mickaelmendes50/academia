@@ -11,7 +11,8 @@ import {
   InputLabel,
 } from '@mui/material';
 import FitnessCenterRoundedIcon from '@mui/icons-material/FitnessCenterRounded';
-import axios from 'axios';
+
+import { axiosAuth } from '../../services';
 
 import { TextInput } from '../../components/Form';
 
@@ -28,16 +29,16 @@ export default function Cadastro() {
     event.preventDefault();
 
     const payload = {
-      name,
+      nome: name,
       email,
-      password,
+      senha: password,
       token,
     };
 
     try {
       setLoading(true);
 
-      await axios.post('http://localhost:8000/users/create', payload);
+      await axiosAuth.post('/users/create', payload);
       toast.success('Cadastro realizado com sucesso!');
 
       navigate('/');

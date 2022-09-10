@@ -1,5 +1,6 @@
 import { useState, createContext, useMemo, useContext } from 'react';
-import axios from 'axios';
+
+import { axiosAuth } from '../services';
 
 type LoginArgs = {
   email: string;
@@ -23,18 +24,15 @@ export default function AuthProvider({ children }: any) {
   );
 
   async function login({ email, password, rememberMe }: LoginArgs) {
-    // const payload = {
-    //   email,
-    //   password,
-    // };
+    const payload = {
+      email,
+      senha: password,
+    };
 
-    // const { data } = await axios.post(
-    //   'http://localhost:8000/user/login',
-    //   payload,
-    // );
+    const { data } = await axiosAuth.post('/user/login', payload);
 
     setUser(email);
-    localStorage.setItem('@academia:auth_token', 'data.token');
+    localStorage.setItem('@academia:auth_token', data.token);
 
     if (rememberMe) {
       localStorage.setItem('@academia:user', email);
