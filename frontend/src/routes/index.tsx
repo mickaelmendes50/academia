@@ -2,8 +2,10 @@ import { Route, Routes } from 'react-router-dom';
 
 import Login from '../pages/Login';
 import Cadastro from '../pages/Cadastro';
-import CadastroStudent from '../pages/CadastroUsuario';
 import Students from '../pages/Students';
+import CreateStudent from '../pages/Students/Create';
+import Exercises from '../pages/Exercises';
+import CreateExercise from '../pages/Exercises/Create';
 import PrivateRoutes from './PrivateRoutes';
 
 import { useAuthContext } from '../contexts/auth';
@@ -23,7 +25,30 @@ export function AppRoutes() {
           </PrivateRoutes>
         }
       />
-      <Route path="/cadastro/students" element={<CadastroStudent />} />
+      <Route
+        path="/students/create"
+        element={
+          <PrivateRoutes user={user} redirectPath="/">
+            <CreateStudent />
+          </PrivateRoutes>
+        }
+      />
+      <Route
+        path="/exercises"
+        element={
+          <PrivateRoutes user={user} redirectPath="/">
+            <Exercises />
+          </PrivateRoutes>
+        }
+      />
+      <Route
+        path="/exercises/create"
+        element={
+          <PrivateRoutes user={user} redirectPath="/">
+            <CreateExercise />
+          </PrivateRoutes>
+        }
+      />
     </Routes>
   );
 }

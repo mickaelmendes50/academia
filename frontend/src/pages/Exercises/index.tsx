@@ -18,7 +18,7 @@ import { useNavigate } from 'react-router-dom';
 
 import { Layout } from '../../components/Layout';
 
-export default function Students() {
+export default function Exercises() {
   const navigate = useNavigate();
 
   return (
@@ -29,9 +29,9 @@ export default function Students() {
         justifyContent="space-between"
       >
         <Box>
-          <Typography variant="h4">Seus alunos</Typography>
+          <Typography variant="h4">Seus exercícios</Typography>
           <Typography variant="body1" marginTop="16px">
-            Esses são os alunos cadastrados na sua academia.
+            Esses são os exercícios cadastrados na sua academia.
           </Typography>
         </Box>
 
@@ -40,11 +40,11 @@ export default function Students() {
           variant="contained"
           startIcon={<AddIcon />}
           onClick={() => {
-            navigate('/students/create');
+            navigate('/exercises/create');
           }}
           style={{ background: '#25a18e' }}
         >
-          Adicionar aluno
+          Adicionar exercício
         </Button>
       </Box>
 
@@ -53,19 +53,17 @@ export default function Students() {
           <TableHead>
             <TableRow>
               <TableCell sx={{ fontWeight: '700' }}>Nome</TableCell>
-              <TableCell sx={{ fontWeight: '700' }}>CPF</TableCell>
-              <TableCell sx={{ fontWeight: '700' }}>E-mail</TableCell>
-              <TableCell sx={{ fontWeight: '700' }}>Tipo</TableCell>
+              <TableCell sx={{ fontWeight: '700' }}>Equipamento</TableCell>
+              <TableCell sx={{ fontWeight: '700' }}>Grupo Muscular</TableCell>
               <TableCell sx={{ fontWeight: '700' }}>Ações</TableCell>
             </TableRow>
           </TableHead>
 
           <TableBody>
             <TableRow>
-              <TableCell>Vitor</TableCell>
-              <TableCell>07544766122</TableCell>
-              <TableCell>vitor@mail.com</TableCell>
-              <TableCell>Mensal</TableCell>
+              <TableCell>Supino</TableCell>
+              <TableCell>Halteres</TableCell>
+              <TableCell>Peitoral</TableCell>
               <TableCell
                 sx={{ display: 'flex', gap: '4px', alignItems: 'center' }}
               >
@@ -78,10 +76,9 @@ export default function Students() {
               </TableCell>
             </TableRow>
             <TableRow>
-              <TableCell>Vitor</TableCell>
-              <TableCell>07544766122</TableCell>
-              <TableCell>vitor@mail.com</TableCell>
-              <TableCell>Mensal</TableCell>
+              <TableCell>Supino</TableCell>
+              <TableCell>Halteres</TableCell>
+              <TableCell>Peitoral</TableCell>
               <TableCell
                 sx={{ display: 'flex', gap: '4px', alignItems: 'center' }}
               >
