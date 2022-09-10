@@ -7,6 +7,7 @@ import CreateStudent from '../pages/Students/Create';
 import EditStudent from '../pages/Students/Edit';
 import Exercises from '../pages/Exercises';
 import CreateExercise from '../pages/Exercises/Create';
+import EditExercise from '../pages/Exercises/Edit';
 import PrivateRoutes from './PrivateRoutes';
 
 import { useAuthContext } from '../contexts/auth';
@@ -55,6 +56,14 @@ export function AppRoutes() {
         element={
           <PrivateRoutes user={user} redirectPath="/">
             <CreateExercise />
+          </PrivateRoutes>
+        }
+      />
+      <Route
+        path="/exercises/edit/:id"
+        element={
+          <PrivateRoutes user={user} redirectPath="/">
+            <EditExercise />
           </PrivateRoutes>
         }
       />

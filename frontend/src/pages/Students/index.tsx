@@ -51,12 +51,12 @@ export default function Students() {
 
   const navigate = useNavigate();
 
-  function handleDeleteUser(id: number) {
+  function handleDeleteStudent(id: number) {
     setStudentIdToDelete(id);
     setIsDialogOpen(true);
   }
 
-  function handleConfirmDeleteUser() {
+  function handleConfirmDeleteStudent() {
     axiosCrud
       .delete(`/students/${studentIdToDelete}`)
       .then(() => {
@@ -79,7 +79,7 @@ export default function Students() {
         setStudents(response.data.data);
       })
       .catch(error => {
-        toast.error('Não foi possível carregar os alunos no momento');
+        toast.error(error?.response?.data?.errors[0] ?? 'Erro desconhecido');
       })
       .finally(() => {
         setIsLoading(false);
@@ -157,7 +157,7 @@ export default function Students() {
                       <IconButton
                         aria-label="delete"
                         onClick={() => {
-                          handleDeleteUser(student.id);
+                          handleDeleteStudent(student.id);
                         }}
                       >
                         <DeleteIcon sx={{ width: '24px', height: '24px' }} />
@@ -185,7 +185,7 @@ export default function Students() {
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setIsDialogOpen(false)}>Não</Button>
-          <Button onClick={handleConfirmDeleteUser}>Sim</Button>
+          <Button onClick={handleConfirmDeleteStudent}>Sim</Button>
         </DialogActions>
       </Dialog>
     </Layout>
