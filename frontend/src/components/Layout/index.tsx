@@ -15,7 +15,7 @@ interface LayoutProps {
 export function Layout({ children }: LayoutProps) {
   const { pathname } = useLocation();
 
-  const { logout } = useAuthContext();
+  const { user, logout } = useAuthContext();
 
   function handleLogout() {
     logout();
@@ -43,12 +43,12 @@ export function Layout({ children }: LayoutProps) {
       >
         <Box display="flex" gap="16px" alignItems="center">
           <Avatar sx={{ width: '56px', height: '56px', background: '#fb8500' }}>
-            JD
+            {user}
           </Avatar>
 
           <Box>
             <Typography component="h1" variant="h6" fontSize="16px">
-              John Doe
+              {user}
             </Typography>
             <Typography fontSize="12px">Administrador</Typography>
           </Box>
