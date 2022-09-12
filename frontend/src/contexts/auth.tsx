@@ -31,11 +31,11 @@ export default function AuthProvider({ children }: any) {
 
     const { data } = await axiosAuth.post('/user/login', payload);
 
-    setUser(email);
+    setUser(data.nome);
     localStorage.setItem('@academia:auth_token', data.token);
 
     if (rememberMe) {
-      localStorage.setItem('@academia:user', email);
+      localStorage.setItem('@academia:user', data.nome);
     }
   }
 
