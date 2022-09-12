@@ -43,7 +43,7 @@ export function Layout({ children }: LayoutProps) {
       >
         <Box display="flex" gap="16px" alignItems="center">
           <Avatar sx={{ width: '56px', height: '56px', background: '#fb8500' }}>
-            {user}
+            {user?.charAt(0) ?? 'U'}
           </Avatar>
 
           <Box>
